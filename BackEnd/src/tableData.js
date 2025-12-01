@@ -20,4 +20,10 @@
             };
         }
     })
+
+    // STATUS CHANGE
+    $(document).on('change', '.status-change', function(){
+        let id = $(this).data('id');
+        let status = $(this).is(':checked') ? 'active' : 'pending';
+    })
  });

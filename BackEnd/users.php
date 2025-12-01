@@ -2,12 +2,22 @@
 include 'layout/head.php';
 ?>
 
-<?php include "layout/navBar.php";
-
+<?php 
+include "layout/navBar.php";
+include '../helper/Helper.php';
 $query = "SELECT * FROM users ORDER BY created_at DESC";
 $stmt = $conn->prepare($query);
 $stmt->execute();
 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+if(isset($_POST['submit'])){
+  $name = dataValidation($_POST['name']);
+  $email = dataValidation($_POST['email']);
+  $role = dataValidation($_POST['role']);
+  $status = dataValidation($_POST['status']);
+  var_dump($name, $email, $role, $status);
+
+}
 
 ?>
 <link rel="stylesheet" href="https://cdn.datatables.net/2.3.5/css/dataTables.dataTables.min.css">
@@ -20,8 +30,8 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <h1 class="text-3xl font-bold mb-2">User Management</h1>
           <p class="text-base-content/60">View and manage all users</p>
         </div>
-        <button class="btn btn-primary whitespace-nowrap">
-          <i class="ri-user-add-line text-lg"></i>Add New User
+        <button class="btn btn-primary" onclick="document.getElementById('addUserModal').showModal()">
+          <i class="ri-user-add-line"></i> Add New User
         </button>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -172,13 +182,84 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
       </div>
     </div>
+    <!-- =========== model =========== -->
+    <dialog id="addUserModal" class="modal">
+      <form method="post"  action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="dialog" class="modal-box w-11/12 max-w-3xl p-6 space-y-6" enctype="multipart/form-data">
+        <!-- Modal Header -->
+        <div class="flex justify-between items-center border-b pb-2">
+          <h3 class="text-2xl font-bold text-gray-800">Add New User</h3>
+          <button class="btn btn-sm btn-circle btn-ghost" aria-label="Close" onclick="document.getElementById('addUserModal').close()">✕</button>
+        </div>
+
+        <!-- Form Fields -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Name -->
+          <div class="form-control w-full">
+            <label class="label">
+              <span class="label-text font-medium">Full Name</span>
+            </label>
+            <input type="text" name="name" placeholder="Enter full name" class="input input-bordered w-full" required />
+          </div>
+
+          <!-- Email -->
+          <div class="form-control w-full">
+            <label class="label">
+              <span class="label-text font-medium">Email</span>
+            </label>
+            <input type="email" name="email" placeholder="Enter email address" class="input input-bordered w-full" required />
+          </div>
+
+          <!-- Role -->
+          <div class="form-control w-full">
+            <label class="label">
+              <span class="label-text font-medium">Role</span>
+            </label>
+            <select name="role" class="select select-bordered w-full">
+              <option value="user">User</option>
+              <option value="author">Author</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+
+          <!-- Status -->
+          <div class="form-control w-full">
+            <label class="label">
+              <span class="label-text font-medium">Status</span>
+            </label>
+            <select name="status" class="select select-bordered w-full">
+              <option value="active">Active</option>
+              <option value="pending">Pending</option>
+              <option value="suspended">Suspended</option>
+            </select>
+          </div>
+
+          <!-- Photo Upload -->
+          <div class="form-control w-full md:col-span-2">
+            <label class="label">
+              <span class="label-text font-medium">Profile Photo</span>
+            </label>
+            <input type="file" name="photo" class="file-input file-input-bordered w-full" />
+          </div>
+        </div>
+
+        <!-- Modal Actions -->
+        <div class="modal-action justify-end gap-2">
+          <button type="button" class="btn btn-ghost" onclick="document.getElementById('addUserModal').close()">Cancel</button>
+          <button type="submit" name="submit" class="btn btn-primary">Add User</button>
+        </div>
+      </form>
+    </dialog>
+
   </main>
   </body>
   <!-- include js -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="src/jquery-3.7.1.min.js"></script>
   <?php if (isset($_SESSION['success'])): ?>
     <script>
+      $('#addUserBtn').on('click', function() {
+        $('#addUserModal').prop('checked', true);
+      });
+
       Swal.fire({
         icon: 'success',
         title: 'Success',
@@ -189,6 +270,8 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </script>
   <?php unset($_SESSION['success']);
   endif; ?>
+
+  <script src="src/jquery-3.7.1.min.js"></script>
   <script src="src/tableData.js"></script>
 
   </html>

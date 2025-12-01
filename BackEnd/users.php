@@ -4,7 +4,7 @@ include 'layout/head.php';
 
 <?php include "layout/navBar.php";
 
-$query = "SELECT * FROM users";
+$query = "SELECT * FROM users ORDER BY created_at DESC";
 $stmt = $conn->prepare($query);
 $stmt->execute();
 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -110,7 +110,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <div class="card bg-base-100 shadow-lg rounded-xl">
         <div class="card-body">
           <div class="overflow-x-auto">
-            <table id="myTable" class="table table-zebra">
+            <table class="table table-zebra">
               <thead>
                 <tr>
                   <th>User</th>
@@ -121,9 +121,9 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   <th>Action</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="tableData">
                 <?php foreach ($users as $user): ?>
-                  <tr>
+                  <tr data-id="<?= $user['id'] ?>">
                     <td>
                       <div class="flex items-center gap-3">
                         <div class="avatar">
@@ -136,58 +136,47 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <span class="font-medium"><?= $user['name']; ?></span>
                       </div>
                     </td>
-
                     <td><?= $user['email']; ?></td>
-
                     <td>
-                      <select class="select select-sm select-bordered">
+                      <select class="select select-sm select-bordered role-change" data-id="<?= $user['id']; ?>">
                         <option value="user" <?= $user['role'] === 'user' ? 'selected' : '' ?>>User</option>
                         <option value="author" <?= $user['role'] === 'author' ? 'selected' : '' ?>>Author</option>
                         <option value="admin" <?= $user['role'] === 'admin' ? 'selected' : '' ?>>Admin</option>
                       </select>
                     </td>
-
                     <td>
                       <label class="label cursor-pointer gap-2">
                         <input
-                          class="toggle toggle-success toggle-sm"
+                          class="toggle toggle-success toggle-sm status-change"
                           type="checkbox"
-                          <?= $user['status'] == 1 ? 'checked' : '' ?> />
-                        <span class="text-sm"><?= $user['status'] == 1 ? 'Active' : 'Inactive' ?></span>
+                          data-id="<?= $user['id']; ?>"
+                          <?= $user['status'] == 'active' ? 'checked' : '' ?> />
+                        <span class="text-sm status-text"><?= $user['status'] == 'active' ? 'active' : 'suspended' ?></span>
                       </label>
                     </td>
-
                     <td><?= $user['created_at']; ?></td>
-
                     <td>
                       <div class="flex gap-2">
-                        <a href="userEdite.php?id=<?= $user['id'] ?>" class="btn btn-sm btn-ghost">
-                          <i class="ri-edit-line"></i>
-                        </a>
-
+                        <a href="#" class="btn btn-sm btn-ghost"><i class="ri-edit-line"></i></a>
                         <form action="userDelete.php" method="POST" onsubmit="return confirm('Are you sure?');">
                           <input type="hidden" name="id" value="<?= $user['id']; ?>">
-                          <button class="btn btn-sm btn-error btn-ghost">
-                            <i class="ri-delete-bin-line"></i>
-                          </button>
+                          <button class="btn btn-sm btn-error btn-ghost"><i class="ri-delete-bin-line"></i></button>
                         </form>
-
                       </div>
                     </td>
                   </tr>
                 <?php endforeach; ?>
               </tbody>
-
             </table>
           </div>
         </div>
       </div>
     </div>
   </main>
-
-  </script>
   </body>
+  <!-- include js -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="src/jquery-3.7.1.min.js"></script>
   <?php if (isset($_SESSION['success'])): ?>
     <script>
       Swal.fire({
@@ -200,5 +189,6 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </script>
   <?php unset($_SESSION['success']);
   endif; ?>
+  <script src="src/tableData.js"></script>
 
   </html>

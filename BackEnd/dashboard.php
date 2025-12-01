@@ -3,7 +3,7 @@
 
 <?php include 'layout/navBar.php' ?>
 <div class="flex-1 flex flex-col">
-   <?php include "layout/header.php"?>
+  <?php include "layout/header.php" ?>
   <main class="flex-1 p-6">
     <div class="space-y-6">
       <div
@@ -13,9 +13,12 @@
             <div class="avatar">
               <div
                 class="w-24 h-24 rounded-full ring ring-white ring-offset-2">
-                <img
-                  alt="User"
-                  src="https://readdy.ai/api/search-image?query=professional%20bengali%20person%20avatar%20portrait%20clean%20background%20modern%20style&width=100&height=100&seq=userprofile&orientation=squarish" />
+                <?php
+                $avatarPath = !empty($user['avatar'])
+                  ? "../assets/img_res/{$user['avatar']}"
+                  : "../assets/img_res/7ae1a804af8e025700424b5640eba190.jpg";
+                ?>
+                <img alt="<?= $user['name']; ?>" src="<?= $avatarPath; ?>">
               </div>
             </div>
             <div class="flex-1">
@@ -312,7 +315,5 @@
   </main>
 </div>
 </body>
-
-
-
+ 
 </html>

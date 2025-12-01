@@ -4,103 +4,6 @@ include 'layout/head.php';
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <?php
 include "layout/navBar.php";
-include '../helper/Helper.php';
-
-$query = "SELECT * FROM users ORDER BY created_at DESC";
-$stmt = $conn->prepare($query);
-$stmt->execute();
-$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-$data = [];
-$errors = [];
-
-if (isset($_POST['submit'])) {
-
-  // Sanitize fields
-  $name   = dataValidation($_POST['name']);
-  $email  = dataValidation($_POST['email']);
-  $role   = dataValidation($_POST['role']);
-  $status = dataValidation($_POST['status']);
-
-  // Validate name
-  if (empty($name)) {
-    $errors['name'] = 'Name is required';
-  } else {
-    $data['name'] = $name;
-  }
-
-  // Validate email
-  if (empty($email)) {
-    $errors['email'] = 'Email is required';
-  } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    $errors['email'] = 'Invalid email format';
-  } else {
-    $data['email'] = $email;
-  }
-
-  // Default values
-  $data['role']   = $role ?: 'user';
-  $data['status'] = $status ?: 'active';
-
-  // FILE UPLOAD
-  $data['avatar'] = null; // default
-
-  if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === 0) {
-
-    $avatarName    = $_FILES['avatar']['name'];
-    $avatarTmpName = $_FILES['avatar']['tmp_name'];
-    $avatarSize    = $_FILES['avatar']['size'];
-    $avatarExt     = strtolower(pathinfo($avatarName, PATHINFO_EXTENSION));
-
-    $allowedExt = ['jpg', 'jpeg', 'png'];
-
-    // file size check
-    if ($avatarSize > 5 * 1024 * 1024) {
-      $errors['avatar'] = 'File size exceeds 5MB limit';
-    }
-
-    // extension check
-    if (!in_array($avatarExt, $allowedExt)) {
-      $errors['avatar'] = 'Invalid file type. Allowed: jpg, jpeg, png';
-    }
-
-    // If still no errors → upload file
-    if (!isset($errors['avatar'])) {
-      $prefix = ($data['role'] === 'admin') ? 'admin_' : 'user_';
-      $newAvatarName = uniqid($prefix, true) . '.' . $avatarExt;
-      $avatarUploadPath = '../assets/img_res/' . $newAvatarName;
-
-      if (move_uploaded_file($avatarTmpName, $avatarUploadPath)) {
-        $data['avatar'] =  $newAvatarName;
-      } else {
-        $errors['avatar'] = 'Failed to upload avatar';
-      }
-    }
-  }
-
-  // INSERT INTO DATABASE
-  if (empty($errors)) {
-    $passwordHash = password_hash('password123', PASSWORD_BCRYPT);
-    $query = "INSERT INTO users 
-(name,email, password, role, avatar, status, created_at) 
-VALUES 
-(:name, :email, :password, :role, :avatar, :status, NOW())";
-
-    $stmt = $conn->prepare($query);
-    $stmt->bindParam(':name', $data['name']);
-    $stmt->bindParam(':email', $data['email']);
-    $stmt->bindParam(':password', $passwordHash);
-    $stmt->bindParam(':role', $data['role']);
-    $stmt->bindParam(':avatar', $data['avatar']);
-    $stmt->bindParam(':status', $data['status']);
-
-    if ($stmt->execute()) {
-      $_SESSION['success'] = 'New user added successfully';
-    } else {
-      $errors['error'] = 'Failed to add new user';
-    }
-  }
-}
 ?>
 
 
@@ -118,6 +21,104 @@ VALUES
           <i class="ri-user-add-line"></i> Add New User
         </button>
       </div>
+
+      <?php include '../helper/Helper.php';
+
+      $query = "SELECT * FROM users ORDER BY created_at DESC";
+      $stmt = $conn->prepare($query);
+      $stmt->execute();
+      $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+      $data = [];
+      $errors = [];
+
+      if (isset($_POST['submit'])) {
+
+        // Sanitize fields
+        $name   = dataValidation($_POST['name']);
+        $email  = dataValidation($_POST['email']);
+        $role   = dataValidation($_POST['role']);
+        $status = dataValidation($_POST['status']);
+
+        // Validate name
+        if (empty($name)) {
+          $errors['name'] = 'Name is required';
+        } else {
+          $data['name'] = $name;
+        }
+
+        // Validate email
+        if (empty($email)) {
+          $errors['email'] = 'Email is required';
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+          $errors['email'] = 'Invalid email format';
+        } else {
+          $data['email'] = $email;
+        }
+
+        // Default values
+        $data['role']   = $role ?: 'user';
+        $data['status'] = $status ?: 'active';
+
+        // FILE UPLOAD
+        $data['avatar'] = null; // default
+
+        if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === 0) {
+
+          $avatarName    = $_FILES['avatar']['name'];
+          $avatarTmpName = $_FILES['avatar']['tmp_name'];
+          $avatarSize    = $_FILES['avatar']['size'];
+          $avatarExt     = strtolower(pathinfo($avatarName, PATHINFO_EXTENSION));
+
+          $allowedExt = ['jpg', 'jpeg', 'png'];
+
+          // file size check
+          if ($avatarSize > 5 * 1024 * 1024) {
+            $errors['avatar'] = 'File size exceeds 5MB limit';
+          }
+
+          // extension check
+          if (!in_array($avatarExt, $allowedExt)) {
+            $errors['avatar'] = 'Invalid file type. Allowed: jpg, jpeg, png';
+          }
+
+          // If still no errors → upload file
+          if (!isset($errors['avatar'])) {
+            $prefix = ($data['role'] === 'admin') ? 'admin_' : 'user_';
+            $newAvatarName = uniqid($prefix, true) . '.' . $avatarExt;
+            $avatarUploadPath = '../assets/img_res/' . $newAvatarName;
+
+            if (move_uploaded_file($avatarTmpName, $avatarUploadPath)) {
+              $data['avatar'] =  $newAvatarName;
+            } else {
+              $errors['avatar'] = 'Failed to upload avatar';
+            }
+          }
+        }
+
+        // INSERT INTO DATABASE
+        if (empty($errors)) {
+          $passwordHash = password_hash('password123', PASSWORD_BCRYPT);
+          $query = "INSERT INTO users 
+(name,email, password, role, avatar, status, created_at) 
+VALUES 
+(:name, :email, :password, :role, :avatar, :status, NOW())";
+
+          $stmt = $conn->prepare($query);
+          $stmt->bindParam(':name', $data['name']);
+          $stmt->bindParam(':email', $data['email']);
+          $stmt->bindParam(':password', $passwordHash);
+          $stmt->bindParam(':role', $data['role']);
+          $stmt->bindParam(':avatar', $data['avatar']);
+          $stmt->bindParam(':status', $data['status']);
+
+          if ($stmt->execute()) {
+            $_SESSION['success'] = 'New user added successfully';
+          } else {
+            $errors['error'] = 'Failed to add new user';
+          }
+        }
+      } ?>
       <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div class="card bg-base-100 shadow-lg rounded-xl">
           <div class="card-body">
@@ -126,8 +127,23 @@ VALUES
                 class="w-12 h-12 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center">
                 <i class="ri-user-line text-2xl"></i>
               </div>
+              <?php
+              $totalUsers = count($users);
+              $totalAdmins = count(array_filter($users, function ($user) {
+                return $user['role'] === 'admin';
+              }));
+              $totalAuthor = count(array_filter($users, function ($user) {
+                return $user['role'] === 'author';
+              }));
+              $totalActiveUser = count(array_filter($users, function ($user) {
+                return $user['status'] === 'active';
+              }));
+              ?>
+
+
+
               <div>
-                <p class="text-2xl font-bold">1,254</p>
+                <p class="text-2xl font-bold"><?= $totalUsers ?></p>
                 <p class="text-sm text-base-content/60">Total Users</p>
               </div>
             </div>
@@ -141,7 +157,7 @@ VALUES
                 <i class="ri-user-star-line text-2xl"></i>
               </div>
               <div>
-                <p class="text-2xl font-bold">348</p>
+                <p class="text-2xl font-bold"><?= $totalAuthor ?></p>
                 <p class="text-sm text-base-content/60">Authors</p>
               </div>
             </div>
@@ -155,8 +171,10 @@ VALUES
                 <i class="ri-shield-user-line text-2xl"></i>
               </div>
               <div>
-                <p class="text-2xl font-bold">12</p>
-                <p class="text-sm text-base-content/60">Admins</p>
+                <p class="text-2xl font-bold"><?= $totalAdmins ?></p>
+                <p class="text-sm text-base-content/60">
+                  Admins
+                </p>
               </div>
             </div>
           </div>
@@ -169,8 +187,8 @@ VALUES
                 <i class="ri-user-forbid-line text-2xl"></i>
               </div>
               <div>
-                <p class="text-2xl font-bold">28</p>
-                <p class="text-sm text-base-content/60">Suspended</p>
+                <p class="text-2xl font-bold"><?= $totalActiveUser ?></p>
+                <p class="text-sm text-base-content/60">Active User</p>
               </div>
             </div>
           </div>
@@ -222,12 +240,6 @@ VALUES
                       <div class="flex items-center gap-3">
                         <div class="avatar">
                           <div class="w-10 h-10 rounded-full">
-                            <?php
-                            $avatarPath = !empty($user['avatar'])
-                              ? "../assets/img_res/{$user['avatar']}"
-                              : "../assets/img_res/7ae1a804af8e025700424b5640eba190.jpg";
-                            ?>
-                            <img alt="<?= $user['name']; ?>" src="<?= $avatarPath; ?>">
 
                             <img alt="<?= $user['name']; ?>" src="<?= $avatarPath; ?>">
                           </div>
@@ -306,7 +318,6 @@ VALUES
             <select name="role" class="select select-bordered w-full">
               <option value="user">User</option>
               <option value="author">Author</option>
-              <option value="admin">Admin</option>
             </select>
           </div>
 

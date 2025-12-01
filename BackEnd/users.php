@@ -1,25 +1,109 @@
 ﻿<?php
 include 'layout/head.php';
 ?>
-
-<?php 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<?php
 include "layout/navBar.php";
 include '../helper/Helper.php';
+
 $query = "SELECT * FROM users ORDER BY created_at DESC";
 $stmt = $conn->prepare($query);
 $stmt->execute();
 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-if(isset($_POST['submit'])){
-  $name = dataValidation($_POST['name']);
-  $email = dataValidation($_POST['email']);
-  $role = dataValidation($_POST['role']);
+$data = [];
+$errors = [];
+
+if (isset($_POST['submit'])) {
+
+  // Sanitize fields
+  $name   = dataValidation($_POST['name']);
+  $email  = dataValidation($_POST['email']);
+  $role   = dataValidation($_POST['role']);
   $status = dataValidation($_POST['status']);
-  var_dump($name, $email, $role, $status);
 
+  // Validate name
+  if (empty($name)) {
+    $errors['name'] = 'Name is required';
+  } else {
+    $data['name'] = $name;
+  }
+
+  // Validate email
+  if (empty($email)) {
+    $errors['email'] = 'Email is required';
+  } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $errors['email'] = 'Invalid email format';
+  } else {
+    $data['email'] = $email;
+  }
+
+  // Default values
+  $data['role']   = $role ?: 'user';
+  $data['status'] = $status ?: 'active';
+
+  // FILE UPLOAD
+  $data['avatar'] = null; // default
+
+  if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === 0) {
+
+    $avatarName    = $_FILES['avatar']['name'];
+    $avatarTmpName = $_FILES['avatar']['tmp_name'];
+    $avatarSize    = $_FILES['avatar']['size'];
+    $avatarExt     = strtolower(pathinfo($avatarName, PATHINFO_EXTENSION));
+
+    $allowedExt = ['jpg', 'jpeg', 'png'];
+
+    // file size check
+    if ($avatarSize > 5 * 1024 * 1024) {
+      $errors['avatar'] = 'File size exceeds 5MB limit';
+    }
+
+    // extension check
+    if (!in_array($avatarExt, $allowedExt)) {
+      $errors['avatar'] = 'Invalid file type. Allowed: jpg, jpeg, png';
+    }
+
+    // If still no errors → upload file
+    if (!isset($errors['avatar'])) {
+      $prefix = ($data['role'] === 'admin') ? 'admin_' : 'user_';
+      $newAvatarName = uniqid($prefix, true) . '.' . $avatarExt;
+      $avatarUploadPath = '../assets/img_res/' . $newAvatarName;
+
+      if (move_uploaded_file($avatarTmpName, $avatarUploadPath)) {
+        $data['avatar'] =  $newAvatarName;
+      } else {
+        $errors['avatar'] = 'Failed to upload avatar';
+      }
+    }
+  }
+
+  // INSERT INTO DATABASE
+  if (empty($errors)) {
+    $passwordHash = password_hash('password123', PASSWORD_BCRYPT);
+    $query = "INSERT INTO users 
+(name,email, password, role, avatar, status, created_at) 
+VALUES 
+(:name, :email, :password, :role, :avatar, :status, NOW())";
+
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':name', $data['name']);
+    $stmt->bindParam(':email', $data['email']);
+    $stmt->bindParam(':password', $passwordHash);
+    $stmt->bindParam(':role', $data['role']);
+    $stmt->bindParam(':avatar', $data['avatar']);
+    $stmt->bindParam(':status', $data['status']);
+
+    if ($stmt->execute()) {
+      $_SESSION['success'] = 'New user added successfully';
+    } else {
+      $errors['error'] = 'Failed to add new user';
+    }
+  }
 }
-
 ?>
+
+
 <link rel="stylesheet" href="https://cdn.datatables.net/2.3.5/css/dataTables.dataTables.min.css">
 <div class="flex-1 flex flex-col">
   <?php include "layout/header.php" ?>
@@ -138,9 +222,14 @@ if(isset($_POST['submit'])){
                       <div class="flex items-center gap-3">
                         <div class="avatar">
                           <div class="w-10 h-10 rounded-full">
-                            <img
-                              alt="<?= $user['name']; ?>"
-                              src="<?= !empty($user['photo']) ? $user['photo'] : '../assete/img_res/afa1ed31635ccb5ee582369b541fc71d.jpg'; ?>" />
+                            <?php
+                            $avatarPath = !empty($user['avatar'])
+                              ? "../assets/img_res/{$user['avatar']}"
+                              : "../assets/img_res/7ae1a804af8e025700424b5640eba190.jpg";
+                            ?>
+                            <img alt="<?= $user['name']; ?>" src="<?= $avatarPath; ?>">
+
+                            <img alt="<?= $user['name']; ?>" src="<?= $avatarPath; ?>">
                           </div>
                         </div>
                         <span class="font-medium"><?= $user['name']; ?></span>
@@ -161,7 +250,7 @@ if(isset($_POST['submit'])){
                           type="checkbox"
                           data-id="<?= $user['id']; ?>"
                           <?= $user['status'] == 'active' ? 'checked' : '' ?> />
-                        <span class="text-sm status-text"><?= $user['status'] == 'active' ? 'active' : 'suspended' ?></span>
+                        <span class="text-sm status-text"><?= $user['status'] == 'active' ? 'active' : 'pending' ?></span>
                       </label>
                     </td>
                     <td><?= $user['created_at']; ?></td>
@@ -184,7 +273,7 @@ if(isset($_POST['submit'])){
     </div>
     <!-- =========== model =========== -->
     <dialog id="addUserModal" class="modal">
-      <form method="post"  action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="dialog" class="modal-box w-11/12 max-w-3xl p-6 space-y-6" enctype="multipart/form-data">
+      <form method="post" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="dialog" class="modal-box w-11/12 max-w-3xl p-6 space-y-6" enctype="multipart/form-data">
         <!-- Modal Header -->
         <div class="flex justify-between items-center border-b pb-2">
           <h3 class="text-2xl font-bold text-gray-800">Add New User</h3>
@@ -233,12 +322,12 @@ if(isset($_POST['submit'])){
             </select>
           </div>
 
-          <!-- Photo Upload -->
+          <!-- avatar Upload -->
           <div class="form-control w-full md:col-span-2">
             <label class="label">
-              <span class="label-text font-medium">Profile Photo</span>
+              <span class="label-text font-medium">Profile avatar</span>
             </label>
-            <input type="file" name="photo" class="file-input file-input-bordered w-full" />
+            <input type="file" name="avatar" class="file-input file-input-bordered w-full" />
           </div>
         </div>
 
@@ -253,13 +342,9 @@ if(isset($_POST['submit'])){
   </main>
   </body>
   <!-- include js -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <?php if (isset($_SESSION['success'])): ?>
     <script>
-      $('#addUserBtn').on('click', function() {
-        $('#addUserModal').prop('checked', true);
-      });
-
       Swal.fire({
         icon: 'success',
         title: 'Success',
@@ -271,7 +356,6 @@ if(isset($_POST['submit'])){
   <?php unset($_SESSION['success']);
   endif; ?>
 
+
   <script src="src/jquery-3.7.1.min.js"></script>
   <script src="src/tableData.js"></script>
-
-  </html>

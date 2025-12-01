@@ -28,7 +28,7 @@ include 'layout/head.php'
               <img
                 alt="Technology"
                 class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
-                src="https://public.readdy.ai/assete/img_res/e12da341716c0f65c514d5aa1fe3b805.jpg"
+                src="https://public.readdy.ai/assets/img_res/e12da341716c0f65c514d5aa1fe3b805.jpg"
               />
             </figure>
             <div class="card-body">

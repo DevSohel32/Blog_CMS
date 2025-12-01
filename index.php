@@ -414,7 +414,7 @@
                <img
                   alt="The Future of Artificial Intelligence in Everyday Life"
                   class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
-                  src="assete/img_res/7ae1a804af8e025700424b5640eba190.jpg" />
+                  src="assets/img_res/7ae1a804af8e025700424b5640eba190.jpg" />
                <div class="badge badge-primary absolute top-4 left-4">
                   Technology
                </div>

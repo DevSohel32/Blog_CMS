@@ -287,7 +287,7 @@ include 'layout/head.php'
                   <img
                     alt="Machine Learning Basics for Beginners"
                     class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
-                    src="https://public.readdy.ai/assete/img_res/bb7bfba0071d5fba95badee079b3fe93.jpg" />
+                    src="https://public.readdy.ai/assets/img_res/bb7bfba0071d5fba95badee079b3fe93.jpg" />
                   <div
                     class="badge badge-primary badge-sm absolute top-2 left-2">
                     Technology

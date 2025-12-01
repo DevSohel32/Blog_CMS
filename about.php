@@ -162,7 +162,7 @@ include 'layout/head.php'
               <img
                 alt="Sarah Johnson"
                 class="object-cover object-top"
-                src="https://public.readdy.ai/assete/img_res/afa1ed31635ccb5ee582369b541fc71d.jpg" />
+                src="https://public.readdy.ai/assets/img_res/afa1ed31635ccb5ee582369b541fc71d.jpg" />
             </div>
           </div>
         </figure>

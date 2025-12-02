@@ -1,42 +1,4 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      BIIT Student Dashboard - Bangladesh Institute of Information Technology
-      Bogura
-    </title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
-    <link
-      href="css2?family=Poppins:wght@400;500;600;700&amp;family=Inter:wght@400;500;600&amp;family=Roboto:wght@400;500;600&amp;display=swap"
-      rel="stylesheet"
-    />
-    <!-- Remix Icon -->
-    <link href="npm/remixicon%404.0.0/fonts/remixicon.css" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- DaisyUI CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.js"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              brand: "#4f46e5",
-              accent: "#f43f5e",
-            },
-            spacing: {
-              13: "3.25rem",
-            },
-          },
-        },
-        plugins: [],
-      };
-    </script>
-  </head>
+﻿<?php include 'layout/head.php' ?>
   <body class="flex h-screen bg-gray-50">
       <header
         id="sidebar"

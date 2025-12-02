@@ -46,30 +46,43 @@
        <i class="ri-moon-line text-xl"></i>
      </button>
 
-     <?php if (isset($_SESSION['user_id'])): ?>
+     <?php
+      if (isset($_SESSION['user_id'])):
+        $id = $_SESSION['user_id'];
+        $query = "SELECT * FROM users WHERE id = :id LIMIT 1";
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Prepare avatar path
+        $avatarPath = !empty($user['avatar'])
+          ? "assets/img_res/{$user['avatar']}"
+          : "assets/img_res/avatar.jpg";
+      ?>
+
        <!-- Avatar dropdown for logged-in user -->
        <div class="dropdown dropdown-end">
          <label tabindex="0" class="btn btn-ghost btn-circle avatar">
-           <div class="ring-primary ring-offset-base-100 w-12 rounded-full ring-2 ring-offset-2">
-             <img src="https://img.daisyui.com/images/profile/demo/spiderperson@192.webp" />
+           <div class="  w-12 rounded-full ring-2 ring-offset-2">
+             <img alt="<?= $user['name']; ?>" src="<?= $avatarPath; ?>">
            </div>
          </label>
+
          <ul tabindex="0"
            class="menu menu-compact dropdown-content mt-3 p-2 shadow-lg bg-base-100 rounded-box w-52">
            <li><a href="BackEnd/dashboard.php">Dashboard</a></li>
            <li><a href="BackEnd/profile.php">Profile</a></li>
-           <li>
-             <form method="post" action="logout.php">
-               <a href="logout.php" type="submit" class="w-full text-left">Logout</a>
-             </form>
-           </li>
+           <li><a href="logout.php" class="text-error">
+               <i class="ri-logout-box-line"></i>Logout
+             </a></li>
          </ul>
        </div>
      <?php else: ?>
-       <!-- Login/Register for guests -->
-       <a class="btn btn-ghost btn-sm hidden sm:inline-flex whitespace-nowrap" href="login.php" data-discover="true">Login</a>
-       <a class="btn btn-primary btn-sm hidden sm:inline-flex whitespace-nowrap" href="register.php" data-discover="true">Register</a>
+       <a class="btn btn-ghost btn-sm" href="login.php">Login</a>
+       <a class="btn btn-primary btn-sm" href="register.php">Register</a>
      <?php endif; ?>
+
    </div>
 
  </header>

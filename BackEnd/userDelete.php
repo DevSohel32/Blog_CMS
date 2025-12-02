@@ -1,6 +1,5 @@
 <?php
 session_start();
-include '../database/db_connect.php';
 
 if (!isset($_POST['id'])) {
     header("Location: users.php");

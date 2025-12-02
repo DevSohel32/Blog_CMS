@@ -30,4 +30,5 @@
 <body class="min-h-screen flex flex-col">
   <?php
   session_start();
+  include 'database/db_connect.php';
   ?>

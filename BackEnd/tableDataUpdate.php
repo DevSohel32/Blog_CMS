@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-include '../database/db_connect.php'; 
+
 
 $id = $_POST['id'] ?? null;
 $field = $_POST['field'] ?? null;   

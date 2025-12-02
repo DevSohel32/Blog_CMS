@@ -3,12 +3,17 @@ logo = document.getElementById("logo");
 sidebar = document.getElementById("sidebar");
 menuText = document.querySelectorAll(".menu span");
 mainContent = document.getElementById("main-content");
+
 let isCollapsed = false;
+
 menuBtn.addEventListener("click", () => {
   isCollapsed = !isCollapsed;
+
   if (isCollapsed) {
     menuText.forEach((span) => {
-      span.style.display = "none";
+      span.style.opacity = "0";
+      span.style.width = "0";
+      span.style.overflow = "hidden";
     });
 
     logo.classList.add("hidden");
@@ -16,13 +21,13 @@ menuBtn.addEventListener("click", () => {
     sidebar.style.width = "80px";
     mainContent.style.marginLeft = "80px";
   } else {
-    // Show text
     menuText.forEach((span) => {
-      span.style.display = "inline";
-      logo.classList.remove("hidden");
+      span.style.opacity = "1";
+      span.style.width = "auto";
     });
 
-    // Optional: Restore width
+    logo.classList.remove("hidden");
+
     sidebar.style.width = "280px";
     mainContent.style.marginLeft = "280px";
   }

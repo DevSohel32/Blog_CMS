@@ -1,10 +1,11 @@
 <?php
 
-$query = "SELECT * FROM users limit 1";
+$id = $_SESSION['user_id'];
+$query = "SELECT * FROM users WHERE id = :id";
 $stmt = $conn->prepare($query);
+$stmt->bindParam(':id', $id, PDO::PARAM_INT);
 $stmt->execute();
 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 ?>
 <div
   class="navbar bg-base-100 border-b border-base-300 h-16 px-6 sticky top-0 z-50 backdrop-blur">
@@ -77,7 +78,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?php
             $avatarPath = !empty($user['avatar'])
               ? "../assets/img_res/{$user['avatar']}"
-              : "../assets/img_res/7ae1a804af8e025700424b5640eba190.jpg";
+              : "../assets/img_res/avatar.jpg";
             ?>
             <img alt="<?= $user['name']; ?>" src="<?= $avatarPath; ?>">
           </div>
@@ -87,14 +88,14 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
           tabindex="0"
           class="dropdown-content menu p-2 shadow-xl bg-base-100 rounded-xl w-52 mt-3">
           <li class="menu-title px-4 py-2">
-            <span class="text-sm font-bold"><?= $user['role'] ?></span><span class="text-xs text-base-content/60"><?= $user['email'] ?></span>
+            <span class="text-lg uppercase font-bold"><?= $user['name'] ?></span><span class="text-xs text-base-content/60"><?= $user['email'] ?></span>
           </li>
           <li>
             <a href="../index.php" class="flex items-center gap-2">
               <i class="ri-home-line text-xl"></i>
               Home
             </a>
-          </li> 
+          </li>
           <div class="divider my-0"></div>
           <li>
             <a href="../logout.php" class="text-error"><i class="ri-logout-box-line"></i>Logout</a>

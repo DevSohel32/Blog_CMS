@@ -1,14 +1,9 @@
 <?php
 include 'layout/head.php';
-include 'database/db_connect.php';
-$query = 'SELECT * FROM posts ORDER BY id DESC';
-$stmt = $conn->prepare($query);
-$stmt->execute();
-$posts = $stmt->fetch(PDO::FETCH_ASSOC);
 
 ?>
 <!-- ========== Navbar start ========== -->
-<?php include 'layout/navBar.php' ?>
+<?php include 'layout/navBar.php'; ?>
 <!-- ========== Nav bar end ========== -->
 
 <!-- ==========  Blog Articles start ========== -->
@@ -76,7 +71,7 @@ $posts = $stmt->fetch(PDO::FETCH_ASSOC);
         <div class="card-body">
           <h3
             class="card-title text-xl font-semibold leading-tight hover:text-primary transition-colors">
-            <a href="blogdetails.html" data-discover="true">The Future of Artificial Intelligence in Everyday Life</a>
+            <a href="blogDetails.php" data-discover="true">The Future of Artificial Intelligence in Everyday Life</a>
           </h3>
           <p class="text-base-content/70 leading-relaxed line-clamp-3">
             Exploring how AI is transforming our daily routines, from smart
@@ -118,7 +113,7 @@ $posts = $stmt->fetch(PDO::FETCH_ASSOC);
         <div class="card-body">
           <h3
             class="card-title text-xl font-semibold leading-tight hover:text-primary transition-colors">
-            <a href="blogdetails.html" data-discover="true">Minimalist Living: Finding Joy in Simplicity</a>
+            <a href="blogDetails.php" data-discover="true">Minimalist Living: Finding Joy in Simplicity</a>
           </h3>
           <p class="text-base-content/70 leading-relaxed line-clamp-3">
             Discover the art of minimalist living and how decluttering your
@@ -160,7 +155,7 @@ $posts = $stmt->fetch(PDO::FETCH_ASSOC);
         <div class="card-body">
           <h3
             class="card-title text-xl font-semibold leading-tight hover:text-primary transition-colors">
-            <a href="blogdetails.html" data-discover="true">Design Systems That Scale: A Comprehensive Guide</a>
+            <a href="blogDetails.php" data-discover="true">Design Systems That Scale: A Comprehensive Guide</a>
           </h3>
           <p class="text-base-content/70 leading-relaxed line-clamp-3">
             Learn how to build robust design systems that grow with your
@@ -202,7 +197,7 @@ $posts = $stmt->fetch(PDO::FETCH_ASSOC);
         <div class="card-body">
           <h3
             class="card-title text-xl font-semibold leading-tight hover:text-primary transition-colors">
-            <a href="blogdetails.html" data-discover="true">Building a Successful Remote Team Culture</a>
+            <a href="blogDetails.php" data-discover="true">Building a Successful Remote Team Culture</a>
           </h3>
           <p class="text-base-content/70 leading-relaxed line-clamp-3">
             Practical strategies for creating strong team bonds, maintaining
@@ -244,7 +239,7 @@ $posts = $stmt->fetch(PDO::FETCH_ASSOC);
         <div class="card-body">
           <h3
             class="card-title text-xl font-semibold leading-tight hover:text-primary transition-colors">
-            <a href="blogdetails.html" data-discover="true">Hidden Gems: Exploring Off-the-Beaten-Path Destinations</a>
+            <a href="blogDetails.php" data-discover="true">Hidden Gems: Exploring Off-the-Beaten-Path Destinations</a>
           </h3>
           <p class="text-base-content/70 leading-relaxed line-clamp-3">
             Venture beyond tourist hotspots to discover authentic cultural
@@ -286,7 +281,7 @@ $posts = $stmt->fetch(PDO::FETCH_ASSOC);
         <div class="card-body">
           <h3
             class="card-title text-xl font-semibold leading-tight hover:text-primary transition-colors">
-            <a href="blogdetails.html" data-discover="true">The Science of Productivity: Evidence-Based Techniques</a>
+            <a href="blogDetails.php" data-discover="true">The Science of Productivity: Evidence-Based Techniques</a>
           </h3>
           <p class="text-base-content/70 leading-relaxed line-clamp-3">
             Dive into research-backed methods for enhancing focus, managing
@@ -328,7 +323,7 @@ $posts = $stmt->fetch(PDO::FETCH_ASSOC);
         <div class="card-body">
           <h3
             class="card-title text-xl font-semibold leading-tight hover:text-primary transition-colors">
-            <a href="blogdetails.html" data-discover="true">Sustainable Web Design: Creating Eco-Friendly Websites</a>
+            <a href="blogDetails.php" data-discover="true">Sustainable Web Design: Creating Eco-Friendly Websites</a>
           </h3>
           <p class="text-base-content/70 leading-relaxed line-clamp-3">
             Explore how to reduce your website's carbon footprint through
@@ -370,7 +365,7 @@ $posts = $stmt->fetch(PDO::FETCH_ASSOC);
         <div class="card-body">
           <h3
             class="card-title text-xl font-semibold leading-tight hover:text-primary transition-colors">
-            <a href="blogdetails.html" data-discover="true">Blockchain Beyond Cryptocurrency: Real-World Applications</a>
+            <a href="blogDetails.php" data-discover="true">Blockchain Beyond Cryptocurrency: Real-World Applications</a>
           </h3>
           <p class="text-base-content/70 leading-relaxed line-clamp-3">
             Discover how blockchain technology is revolutionizing industries
@@ -410,7 +405,7 @@ $posts = $stmt->fetch(PDO::FETCH_ASSOC);
         <div class="card-body">
           <h3
             class="card-title text-xl font-semibold leading-tight hover:text-primary transition-colors">
-            <a href="blogdetails.html" data-discover="true">Culinary Adventures: Mastering International Cuisines at
+            <a href="blogDetails.php" data-discover="true">Culinary Adventures: Mastering International Cuisines at
               Home</a>
           </h3>
           <p class="text-base-content/70 leading-relaxed line-clamp-3">

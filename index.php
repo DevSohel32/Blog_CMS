@@ -6,7 +6,6 @@
    include 'layout/navBar.php'
    ?>
 <!-- ========== Navbar End ========== -->
- <?php include 'database/db_connect.php'?>
 <!-- ========== banner start  ========== -->
 <section
    class="relative bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 py-20 lg:py-32">

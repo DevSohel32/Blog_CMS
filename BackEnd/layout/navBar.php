@@ -1,5 +1,4 @@
  <?php
-  include '../database/db_connect.php';
 
   if (!isset($_SESSION['role'])) {
     header("Location:../login.php");
@@ -118,15 +117,15 @@
 
            <!-- author dashboard end -->
          <?php else: ?>
-           <li>
-             <a
-               class="flex items-center gap-3 px-3 py-3 rounded-lg transition-all cursor-pointer group relative 
-               <?= ($current_page === "dashboard.php") ? 'bg-[#1A56DB]/10 border-l-4 border-[#1A56DB] text-[#1A56DB]' : 'text-gray-700 hover:bg-gray-100' ?>
-                focus:outline-none focus:ring-2 focus:ring-[#1A56DB]/30"
-               href="dashboard.php"
-               data-discover="true"><i class="ri-dashboard-line text-xl"></i><span>Dashboard</span></a>
+           <li class="tooltip tooltip-top menu" data-tip="Dashboard">
+             <a class="flex items-center gap-3 px-3 py-3 rounded-lg transition-all cursor-pointer group relative 
+               <?= ($current_page === "profile.php") ? 'bg-[#1A56DB]/10 border-l-4 border-[#1A56DB] text-[#1A56DB]' : 'text-gray-700 hover:bg-gray-100' ?>
+                focus:outline-none focus:ring-2 focus:ring-[#1A56DB]/30" href="#">
+               <i class="ri-dashboard-line text-xl"></i>
+               <span>Dashboard</span>
+             </a>
            </li>
-           <li>
+           <li class="tooltip tooltip-top menu" data-tip="Save Posts">
              <a
                class="flex items-center gap-3 px-3 py-3 rounded-lg transition-all cursor-pointer group relative 
                <?= ($current_page === "users.php") ? 'bg-[#1A56DB]/10 border-l-4 border-[#1A56DB] text-[#1A56DB]' : 'text-gray-700 hover:bg-gray-100' ?>
@@ -134,7 +133,7 @@
                href="./users.php"
                data-discover="true"><i class="ri-bookmark-line text-xl"></i><span>Save Posts</span></a>
            </li>
-           <li>
+           <li class="tooltip tooltip-top menu" data-tip="My Comment">
              <a
                class="flex items-center gap-3 px-3 py-3 rounded-lg transition-all cursor-pointer group relative 
                <?= ($current_page === "comments.php") ? 'bg-[#1A56DB]/10 border-l-4 border-[#1A56DB] text-[#1A56DB]' : 'text-gray-700 hover:bg-gray-100' ?>
@@ -142,7 +141,7 @@
                href="comments.php"
                data-discover="true"><i class="ri-chat-1-line text-xl"></i><span>My Comment</span></a>
            </li>
-           <li>
+           <li class="tooltip tooltip-top menu" data-tip="Profile Setting">
              <a
                class="flex items-center gap-3 px-3 py-3 rounded-lg transition-all cursor-pointer group relative 
                <?= ($current_page === "profile.php") ? 'bg-[#1A56DB]/10 border-l-4 border-[#1A56DB] text-[#1A56DB]' : 'text-gray-700 hover:bg-gray-100' ?>

@@ -3,10 +3,12 @@
   <?php include 'layout/navBar.php' ?>
   <?php
 
-  $query = "SELECT * FROM users limit 1";
-  $stmt = $conn->prepare($query);
-  $stmt->execute();
-  $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+ $id = $_SESSION['user_id'];
+$query = "SELECT * FROM users WHERE id = :id limit 1";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':id', $id, PDO::PARAM_INT);
+$stmt->execute();
+$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   ?>
   <div class="flex-1 flex flex-col">
@@ -37,7 +39,7 @@
                         <?php
                         $avatarPath = !empty($user['avatar'])
                           ? "../assets/img_res/{$user['avatar']}"
-                          : "../assets/img_res/7ae1a804af8e025700424b5640eba190.jpg";
+                          : "../assets/img_res/avatar.jpg";
                         ?>
                         <img id="avatarPreview" alt="<?= $user['name']; ?>" src="<?= $avatarPath; ?>">
                       </div>

@@ -9,8 +9,6 @@ $(document).ready(function() {
       var email = $(this).find('td:nth-child(2)').text().toLowerCase();
       var rowRole = $(this).find('select.role-change').val().toLowerCase();
       var rowStatus = $(this).find('.status-change').is(':checked') ? 'active' : 'pending';
-
-      // Word search: split search input into words and check if all words exist in name/email
       var show = true;
       if (search) {
         var words = search.split(' ');
@@ -22,12 +20,10 @@ $(document).ready(function() {
         }
       }
 
-      // Role filter
       if (role && rowRole !== role) {
         show = false;
       }
 
-      // Status filter
       if (status && rowStatus !== status) {
         show = false;
       }
@@ -35,11 +31,8 @@ $(document).ready(function() {
       $(this).toggle(show);
     });
   }
-
-  // Trigger filtering on keyup for search and change for dropdowns
   $('input[placeholder="Search users..."]').on('keyup', filterTable);
   $('.role-filter, .status-filter').on('change', filterTable);
 
-  // Initial filter
   filterTable();
 });

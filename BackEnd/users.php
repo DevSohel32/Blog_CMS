@@ -9,7 +9,9 @@ include "layout/navBar.php";
 
 <link rel="stylesheet" href="https://cdn.datatables.net/2.3.5/css/dataTables.dataTables.min.css">
 <div class="flex-1 flex flex-col">
+  <!-- =========== navBar ======== -->
   <?php include "layout/header.php" ?>
+  <!-- =========== navBar start ======== -->
   <main class="flex-1 p-6">
     <div class="space-y-6">
       <div class="flex items-center justify-between">
@@ -240,6 +242,11 @@ VALUES
                       <div class="flex items-center gap-3">
                         <div class="avatar">
                           <div class="w-10 h-10 rounded-full">
+                            <?php
+                            $avatarPath = !empty($user['avatar'])
+                              ? "../assets/img_res/{$user['avatar']}"
+                              : "../assets/img_res/7ae1a804af8e025700424b5640eba190.jpg";
+                            ?>
 
                             <img alt="<?= $user['name']; ?>" src="<?= $avatarPath; ?>">
                           </div>
@@ -310,50 +317,59 @@ VALUES
             <input type="email" name="email" placeholder="Enter email address" class="input input-bordered w-full" required />
           </div>
 
-          <!-- Role -->
-          <div class="form-control w-full">
-            <label class="label">
-              <span class="label-text font-medium">Role</span>
-            </label>
-            <select name="role" class="select select-bordered w-full">
-              <option value="user">User</option>
-              <option value="author">Author</option>
-            </select>
-          </div>
+          <select class="select select-bordered role-filter">
+            <option value="">All Roles</option>
+            <option value="user">User</option>
+            <option value="author">Author</option>
+            <option value="admin">Admin</option>
+          </select>
 
-          <!-- Status -->
-          <div class="form-control w-full">
-            <label class="label">
-              <span class="label-text font-medium">Status</span>
-            </label>
-            <select name="status" class="select select-bordered w-full">
-              <option value="active">Active</option>
-              <option value="pending">Pending</option>
-              <option value="suspended">Suspended</option>
-            </select>
-          </div>
+          <select class="select select-bordered status-filter">
+            <option value="">All Status</option>
+            <option value="active">Active</option>
+            <option value="suspended">Suspended</option>
+          </select>
 
-          <!-- avatar Upload -->
+          <!-- Avatar Upload -->
           <div class="form-control w-full md:col-span-2">
             <label class="label">
-              <span class="label-text font-medium">Profile avatar</span>
+              <span class="label-text font-medium">Profile Avatar</span>
             </label>
-            <input type="file" name="avatar" class="file-input file-input-bordered w-full" />
+            <input type="file" name="avatar" id="avatarInput" class="file-input file-input-bordered w-full" accept="image/*" />
+            <!-- Image preview -->
+            <img id="avatarPreview" class="mt-2 w-32 h-32 object-cover rounded-full hidden" alt="Avatar Preview">
           </div>
-        </div>
 
-        <!-- Modal Actions -->
-        <div class="modal-action justify-end gap-2">
-          <button type="button" class="btn btn-ghost" onclick="document.getElementById('addUserModal').close()">Cancel</button>
-          <button type="submit" name="submit" class="btn btn-primary">Add User</button>
-        </div>
+
+          <!-- Modal Actions -->
+          <div class="modal-action justify-end gap-2">
+            <button type="button" class="btn btn-ghost" onclick="document.getElementById('addUserModal').close()">Cancel</button>
+            <button type="submit" name="submit" class="btn btn-primary">Add User</button>
+          </div>
       </form>
     </dialog>
 
   </main>
   </body>
   <!-- include js -->
-
+   <script src="src/jquery-3.7.1.min.js"></script>
+ <script src="src/dataSearch.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#avatarInput').on('change', function() {
+        var file = this.files[0];
+        if (file) {
+          var reader = new FileReader();
+          reader.onload = function(e) {
+            $('#avatarPreview').attr('src', e.target.result).show();
+          }
+          reader.readAsDataURL(file);
+        } else {
+          $('#avatarPreview').hide();
+        }
+      });
+    });
+  </script>
   <?php if (isset($_SESSION['success'])): ?>
     <script>
       Swal.fire({
@@ -368,5 +384,4 @@ VALUES
   endif; ?>
 
 
-  <script src="src/jquery-3.7.1.min.js"></script>
   <script src="src/tableData.js"></script>

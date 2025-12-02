@@ -25,6 +25,9 @@
     rel="stylesheet"
     type="text/css" />
     <link rel="stylesheet" href="src/style.css">
+  
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.3.5/css/dataTables.dataTables.min.css">
+
 </head>
 
 <body class="flex min-h-screen bg-base-200">

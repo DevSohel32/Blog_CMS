@@ -1,5 +1,5 @@
 ﻿<?php include 'layout/head.php' ?>
-
+<?php unset($_SESSION['success']); ?>
 
 <?php include 'layout/navBar.php' ?>
 <div class="flex-1 flex flex-col">

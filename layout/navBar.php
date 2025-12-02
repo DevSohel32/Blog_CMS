@@ -57,7 +57,7 @@
          <ul tabindex="0"
            class="menu menu-compact dropdown-content mt-3 p-2 shadow-lg bg-base-100 rounded-box w-52">
            <li><a href="BackEnd/dashboard.php">Dashboard</a></li>
-           <li><a href="profile.php">Profile</a></li>
+           <li><a href="BackEnd/profile.php">Profile</a></li>
            <li>
              <form method="post" action="logout.php">
                <a href="logout.php" type="submit" class="w-full text-left">Logout</a>

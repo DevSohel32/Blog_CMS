@@ -90,11 +90,11 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <span class="text-sm font-bold"><?= $user['role'] ?></span><span class="text-xs text-base-content/60"><?= $user['email'] ?></span>
           </li>
           <li>
-            <a><i class="ri-user-line"></i>Profile</a>
-          </li>
-          <li>
-            <a><i class="ri-settings-3-line"></i>Settings</a>
-          </li>
+            <a href="../index.php" class="flex items-center gap-2">
+              <i class="ri-home-line text-xl"></i>
+              Home
+            </a>
+          </li> 
           <div class="divider my-0"></div>
           <li>
             <a href="../logout.php" class="text-error"><i class="ri-logout-box-line"></i>Logout</a>
